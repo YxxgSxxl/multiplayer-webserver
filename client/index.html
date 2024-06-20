@@ -12,7 +12,9 @@
     <script>
         const socket = io();
 
-        socket.emit('happyMsg');
+        socket.emit('client2server', {
+            reason: 'it\'s a client to server message'
+        });
     </script>
 </body>
 </html>
