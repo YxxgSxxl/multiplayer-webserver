@@ -34,9 +34,9 @@ setInterval(() => {
         const socket = SOCKET_LIST[i];
         socket.x++;
         socket.y++;
-        socket.emit('newPosition' {
+        socket.emit('newPosition', {
             x: socket.x,
             y: socket.y
-        })
+        });
     }
 }, 1000/25);
