@@ -9,10 +9,10 @@
     <h1>Chat</h1>
 
     <div class="message">
-      <form action="">
-        <input type="text" name="msg" id="msg" autocomplete="off" />
-        <input type="submit" value="Send Message" />
-      </form>
+      <!-- <form action=""> -->
+      <input type="text" name="msg" id="msg" autocomplete="off" />
+      <input type="submit" id="submit" value="Send Message" />
+      <!-- </form> -->
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -20,7 +20,20 @@
       const messageTransmission = () => {
         const socket = io();
 
-        socket.emit("msg", () => {});
+        let textArea = document.getElementById("msg");
+        let submit = document.getElementById("submit");
+        let textValue = "";
+
+        submit.addEventListener("click", () => {
+          textArea.innerText = textValue;
+
+          console.log(textValue);
+          socket.emit("message", textValue);
+        });
+
+        // socket.on("msg", (textValue) => {
+        //   console.log(textValue);
+        // });
       };
 
       messageTransmission();

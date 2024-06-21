@@ -60,11 +60,24 @@ io.on('connection', (socket) => {
         
         console.info(allClients);
     });
+
+    socket.on('msg', (msg) => {
+        console.log('Message: ' + msg);
+    })
+
+    io.on("connection", (socket) => {
+        socket.on("message", (arg) => {
+          console.log(arg); // world
+        });
+      });
 })
 
 // io.on('msg', (msg) => {
 //     console.log('message: ' + msg);
 // });
+
+
+
 
 server.listen(3000, () => {
     console.log('Listening now');
