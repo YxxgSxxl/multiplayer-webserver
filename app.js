@@ -26,12 +26,15 @@ io.on('connection', (socket) => {
         // allClients.pop();
         console.log(`L'utilisateur "${allClients[0].id}" s\'est déconnecté`);
         
-        const i = allClients.indexOf(socket);
-        allClients.splice(i, 1);
+        for (var i = 0; i < allClients.length; i++) {
+            if (allClients[i].id === socket.id) {
+                allClients.splice(i, 1);
+            }
+        }
+
+        // const i = allClients.indexOf(socket);
         console.info(allClients);
     });
-
-
     console.info(allClients);
 })
 
