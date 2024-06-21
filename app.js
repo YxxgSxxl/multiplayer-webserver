@@ -9,27 +9,50 @@ app.get('/', (req, res) => {
 
 // Socket.io
 const allClients = [];
+let clientConnected = undefined;
+let online = 0;
 
 // Connections management
 io.on('connection', (socket) => {
-    allClients.push(
-        {
-            id: socket.id,
-            ip: socket.handshake.address,
-            time: socket.handshake.time
-        }
-    );
+    clientConnected = false;
+    online++;
 
+    if (online >= 1) {
+        allClients.online = online;
+    }
+
+    for (var i = 0; i < allClients.length; i++) {
+        if (allClients[i].id === socket.id) {
+            clientConnected = true;
+        }
+    }
+    
+    if (clientConnected === false) {
+        allClients.push(
+            [{
+                id: socket.id,
+                ip: socket.handshake.address,
+                time: socket.handshake.time
+            }]
+        );
+    }
+    
     console.info(`L'utilisateur "${allClients[0].id}" s\'est connecté.`);
 
     socket.on('disconnect', () => {
-        // allClients.pop();
+        online--;
+        allClients.online = allClients.online - 1;
+        clientConnected = false;
         console.log(`L'utilisateur "${allClients[0].id}" s\'est déconnecté`);
         
         for (var i = 0; i < allClients.length; i++) {
             if (allClients[i].id === socket.id) {
                 allClients.splice(i, 1);
             }
+        }
+
+        if (online <= 0) {
+                allClients.online = "No User connected";
         }
 
         // const i = allClients.indexOf(socket);
