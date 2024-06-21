@@ -29,23 +29,26 @@ io.on('connection', (socket) => {
     
     if (clientConnected === false) {
         allClients.push(
-            [{
+            {
                 id: socket.id,
                 ip: socket.handshake.address,
                 time: socket.handshake.time
-            }]
+            }
         );
     }
     
+    console.clear();
+    console.info(allClients);
     console.info(`L'utilisateur "${allClients[0].id}" s\'est connecté.`);
-
+    
     socket.on('disconnect', () => {
+        console.clear();
         online--;
         allClients.online = allClients.online - 1;
         clientConnected = false;
-        console.log(`L'utilisateur "${allClients[0].id}" s\'est déconnecté`);
         
         for (var i = 0; i < allClients.length; i++) {
+            // console.log(allClients[i].id );
             if (allClients[i].id === socket.id) {
                 allClients.splice(i, 1);
             }
@@ -54,16 +57,14 @@ io.on('connection', (socket) => {
         if (online <= 0) {
                 allClients.online = "No User connected";
         }
-
-        // const i = allClients.indexOf(socket);
+        
         console.info(allClients);
     });
-    console.info(allClients);
 })
 
-io.on('msg', (msg) => {
-    console.log('message: ' + msg);
-});
+// io.on('msg', (msg) => {
+//     console.log('message: ' + msg);
+// });
 
 server.listen(3000, () => {
     console.log('Listening now');
