@@ -1,42 +1,45 @@
-// Express section (Server init)
-const express = require('express');
-const app = express();
-const serv = require('http').Server(app);
+var express = require('express');
+var app = express();
+var serv = require('http').Server(app);
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.sendFile(__dirname + '/client/index.html');
 });
-
 app.use('/client', express.static(__dirname + '/client'));
 
 serv.listen(2000);
-console.info('server started');
+console.log("Server started.");
 
-const SOCKET_LIST = {};
+var SOCKET_LIST = {};
 
-// Socket.io section (Client/Server communication)
-const io = require('socket.io')(serv,{});
-io.sockets.on('connection', function(socket) {
-    console.log('socket connection');
-    
+var io = require('socket.io')(serv, {});
+io.sockets.on('connection', function (socket) {
     socket.id = Math.random();
     socket.x = 0;
     socket.y = 0;
-    SOCKET_LIST['socket.id'] = socket;
+    socket.number = "" + Math.floor(10 * Math.random());
+    SOCKET_LIST[socket.id] = socket;
 
-    // socket.on('client2server', (data) => {
-    //     console.log('client2server message + ' + data.reason);
-    // })
+    socket.on('disconnect', function () {
+        delete SOCKET_LIST[socket.id];
+    });
+
 });
 
-setInterval(() => {
-    for (let i in SOCKET_LIST) {
-        const socket = SOCKET_LIST[i];
+setInterval(function () {
+    var pack = [];
+    for (var i in SOCKET_LIST) {
+        var socket = SOCKET_LIST[i];
         socket.x++;
         socket.y++;
-        socket.emit('newPosition', {
+        pack.push({
             x: socket.x,
-            y: socket.y
+            y: socket.y,
+            number: socket.number
         });
     }
-}, 1000/25);
+    for (var i in SOCKET_LIST) {
+        var socket = SOCKET_LIST[i];
+        socket.emit('newPositions', pack);
+    }
+}, 1000 / 25);
