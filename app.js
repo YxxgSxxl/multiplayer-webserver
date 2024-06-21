@@ -1,45 +1,44 @@
-var express = require('express');
-var app = express();
-var serv = require('http').Server(app);
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/client/index.html');
-});
-app.use('/client', express.static(__dirname + '/client'));
+// ExpressJS
+app.get('/', (req, res) => {
+    res.sendFile(`${__dirname}/public/index.html`)
+})
 
-serv.listen(2000);
-console.log("Server started.");
+// Socket.io
+const allClients = [];
 
-var SOCKET_LIST = {};
+// Connections management
+io.on('connection', (socket) => {
+    allClients.push(
+        {
+            id: socket.id,
+            ip: socket.handshake.address,
+            time: socket.handshake.time
+        }
+    );
 
-var io = require('socket.io')(serv, {});
-io.sockets.on('connection', function (socket) {
-    socket.id = Math.random();
-    socket.x = 0;
-    socket.y = 0;
-    socket.number = "" + Math.floor(10 * Math.random());
-    SOCKET_LIST[socket.id] = socket;
+    console.info(`L'utilisateur "${allClients[0].id}" s\'est connecté.`);
 
-    socket.on('disconnect', function () {
-        delete SOCKET_LIST[socket.id];
+    socket.on('disconnect', () => {
+        // allClients.pop();
+        console.log(`L'utilisateur "${allClients[0].id}" s\'est déconnecté`);
+        
+        const i = allClients.indexOf(socket);
+        allClients.splice(i, 1);
+        console.info(allClients);
     });
 
+
+    console.info(allClients);
+})
+
+io.on('msg', (msg) => {
+    console.log('message: ' + msg);
 });
 
-setInterval(function () {
-    var pack = [];
-    for (var i in SOCKET_LIST) {
-        var socket = SOCKET_LIST[i];
-        socket.x++;
-        socket.y++;
-        pack.push({
-            x: socket.x,
-            y: socket.y,
-            number: socket.number
-        });
-    }
-    for (var i in SOCKET_LIST) {
-        var socket = SOCKET_LIST[i];
-        socket.emit('newPositions', pack);
-    }
-}, 1000 / 25);
+server.listen(3000, () => {
+    console.log('Listening now');
+})

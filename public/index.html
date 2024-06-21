@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webserver Chat</title>
+  </head>
+  <body>
+    <h1>Chat</h1>
+
+    <div class="message">
+      <form action="">
+        <input type="text" name="msg" id="msg" autocomplete="off" />
+        <input type="submit" value="Send Message" />
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const messageTransmission = () => {
+        const socket = io();
+
+        socket.emit("msg", () => {});
+      };
+
+      messageTransmission();
+    </script>
+  </body>
+</html>
