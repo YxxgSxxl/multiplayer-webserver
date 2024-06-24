@@ -61,15 +61,17 @@ io.on('connection', (socket) => {
         console.info(allClients);
     });
 
-    socket.on('msg', (msg) => {
+    socket.on('chat_message', (msg) => {
         console.log('Message: ' + msg);
+
+        io.emit("chat_message", msg);
     })
 
-    io.on("connection", (socket) => {
-        socket.on("message", (arg) => {
-          console.log(arg); // world
-        });
-      });
+    // io.on("connection", (socket) => {
+    //     socket.on("message", (arg) => {
+    //       console.log(arg); // world
+    //     });
+    //   });
 })
 
 // io.on('msg', (msg) => {

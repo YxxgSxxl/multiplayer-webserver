@@ -13,18 +13,31 @@
         <input type="text" name="msg" id="msg" autocomplete="off" />
         <input type="submit" id="submit" value="Send Message" />
       </form>
+
+      <textarea id="textArea" rows="15" cols="60"></textarea>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const form = document.getElementById("form");
-      const textArea = document.getElementById("msg");
+      const message = document.getElementById("msg");
       const submit = document.getElementById("submit");
+      let textArea = document.getElementById("textArea");
+
+      const socket = io();
 
       form.addEventListener("submit", (e) => {
         e.preventDefault(); // Prevents the page from loading when submiting.
 
-        console.log(textArea, submit);
+        socket.emit("chat_message", message.value);
+
+        // console.log(textArea.value, submit, socket);
+      });
+
+      socket.on("chat_message", (msg) => {
+        console.log(msg);
+
+        textArea.innerHTML += msg;
       });
     </script>
   </body>
