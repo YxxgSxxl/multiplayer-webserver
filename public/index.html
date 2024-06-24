@@ -31,6 +31,8 @@
 
         socket.emit("chat_message", message.value);
 
+        message.value = "";
+
         console.log(textArea.value, submit, socket);
       });
 
