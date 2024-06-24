@@ -9,34 +9,23 @@
     <h1>Chat</h1>
 
     <div class="message">
-      <!-- <form action=""> -->
-      <input type="text" name="msg" id="msg" autocomplete="off" />
-      <input type="submit" id="submit" value="Send Message" />
-      <!-- </form> -->
+      <form action="" id="form">
+        <input type="text" name="msg" id="msg" autocomplete="off" />
+        <input type="submit" id="submit" value="Send Message" />
+      </form>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const messageTransmission = () => {
-        const socket = io();
+      const form = document.getElementById("form");
+      const textArea = document.getElementById("msg");
+      const submit = document.getElementById("submit");
 
-        let textArea = document.getElementById("msg");
-        let submit = document.getElementById("submit");
-        let textValue = "";
+      form.addEventListener("submit", (e) => {
+        e.preventDefault(); // Prevents the page from loading when submiting.
 
-        submit.addEventListener("click", () => {
-          textArea.innerText = textValue;
-
-          console.log(textValue);
-          socket.emit("message", textValue);
-        });
-
-        // socket.on("msg", (textValue) => {
-        //   console.log(textValue);
-        // });
-      };
-
-      messageTransmission();
+        console.log(textArea, submit);
+      });
     </script>
   </body>
 </html>
