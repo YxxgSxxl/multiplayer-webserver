@@ -14,7 +14,7 @@
         <input type="submit" id="submit" value="Send Message" />
       </form>
 
-      <textarea id="textArea" rows="15" cols="60"></textarea>
+      <div id="textArea"></div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -31,13 +31,13 @@
 
         socket.emit("chat_message", message.value);
 
-        // console.log(textArea.value, submit, socket);
+        console.log(textArea.value, submit, socket);
       });
 
       socket.on("chat_message", (msg) => {
         console.log(msg);
 
-        textArea.innerHTML += msg;
+        textArea.innerHTML += `<p>${msg}</p><br>`;
       });
     </script>
   </body>
